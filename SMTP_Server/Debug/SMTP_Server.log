@@ -1,0 +1,5 @@
+﻿  SMTP_ServerDlg.cpp
+SMTP_ServerDlg.obj : error LNK2001: 无法解析的外部符号 "public: virtual void __thiscall CSMTPServerDlg::OnAccept(int)" (?OnAccept@CSMTPServerDlg@@UAEXH@Z)
+SMTP_ServerDlg.obj : error LNK2001: 无法解析的外部符号 "public: virtual void __thiscall CSMTPServerDlg::OnReceive(int)" (?OnReceive@CSMTPServerDlg@@UAEXH@Z)
+SMTP_ServerDlg.obj : error LNK2001: 无法解析的外部符号 "public: virtual void __thiscall CSMTPServerDlg::OnClose(int)" (?OnClose@CSMTPServerDlg@@UAEXH@Z)
+C:\Users\曾志韬\source\repos\SMTP_Server\Debug\SMTP_Server.exe : fatal error LNK1120: 3 个无法解析的外部命令
