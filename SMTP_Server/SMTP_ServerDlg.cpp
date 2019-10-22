@@ -1,5 +1,4 @@
-﻿
-// SMTP_ServerDlg.cpp: 实现文件
+﻿// SMTP_ServerDlg.cpp: 实现文件
 //
 
 #include "pch.h"
@@ -7,6 +6,7 @@
 #include "SMTP_Server.h"
 #include "SMTP_ServerDlg.h"
 #include "afxdialogex.h"
+#include "CSocketSMTP.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -31,6 +31,8 @@ public:
 // 实现
 protected:
 	DECLARE_MESSAGE_MAP()
+public:
+
 };
 
 CAboutDlg::CAboutDlg() : CDialogEx(IDD_ABOUTBOX)
@@ -69,7 +71,10 @@ BEGIN_MESSAGE_MAP(CSMTPServerDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
-	ON_BN_CLICKED(IDC_BUTTON2, &CSMTPServerDlg::OnBnClickedButtonStart)
+
+	ON_WM_TIMER()
+	ON_BN_CLICKED(IDC_BUTTON2, &CSMTPServerDlg::OnBnClickedButton2)
+	ON_BN_CLICKED(IDC_BUTTON3, &CSMTPServerDlg::OnBnClickedButton3)
 END_MESSAGE_MAP()
 
 
@@ -105,7 +110,6 @@ BOOL CSMTPServerDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	// TODO: 在此添加额外的初始化代码
-
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 
@@ -158,24 +162,42 @@ HCURSOR CSMTPServerDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+void CSMTPServerDlg::OnTimer(UINT_PTR nIDEvent)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	CDialogEx::OnTimer(nIDEvent);
+}
 
 
-void CSMTPServerDlg::OnBnClickedButtonStart()
+void CSMTPServerDlg::OnBnClickedButton2()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	BOOL bflag = mysocket.Create(110, SOCK_STREAM, FD_READ | FD_WRITE|FD_ACCEPT);
+	ServerLog.SetWindowTextW(L"SMTP服务器启动,正在监听\n");
+	BOOL bflag = mysocket.Create(25, SOCK_STREAM, FD_READ | FD_WRITE | FD_ACCEPT);
 	if (!bflag)
 	{
 		ServerLog.SetWindowTextW(L"socket创建失败");
 	}
 	else
 	{
-		mysocket.Listen(5);
-
-		USES_CONVERSION;
-
-		/*char* buf = t2a(scmd);
-		mysocket.sendto(buf, 100, _ttoi(sport), sip, 0);*/
-		SetTimer(1, 1000, NULL);
+		if (mysocket.Listen(5))
+		{
+			ServerLog.SetWindowTextW(L"SMTP服务器启动,正在监听\n");
+		}
+		else
+		{
+			ServerLog.SetWindowTextW(L"SMTP启动失败,监听不成功\n");
+			mysocket.Close();
+		}
 	}
+}
+
+
+void CSMTPServerDlg::OnBnClickedButton3()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CString temp;
+	ServerLog.GetWindowTextW(temp);
+	ServerLog.SetWindowTextW(temp + "服务器关闭\n");
+	mysocket.Close();
 }

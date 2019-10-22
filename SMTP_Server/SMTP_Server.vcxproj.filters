@@ -36,6 +36,9 @@
     <ClInclude Include="CSocketSMTP.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="base.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SMTP_Server.cpp">

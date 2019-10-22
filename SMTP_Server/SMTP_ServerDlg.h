@@ -1,8 +1,10 @@
 ﻿
 // SMTP_ServerDlg.h: 头文件
+#include "CSocketSMTP.h"
 //
 
 #pragma once
+
 
 
 // CSMTPServerDlg 对话框
@@ -36,6 +38,9 @@ public:
 	CEdit MailContent;
 	CButton StartButton;
 	CButton StopButton;
-	CAsyncSocket mysocket;
+	CSocketSMTP mysocket;
 	afx_msg void OnBnClickedButtonStart();
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
+	afx_msg void OnBnClickedButton2();
+	afx_msg void OnBnClickedButton3();
 };
