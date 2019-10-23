@@ -39,8 +39,9 @@ public:
 	CButton StartButton;
 	CButton StopButton;
 	CSocketSMTP mysocket;
-	afx_msg void OnBnClickedButtonStart();
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	afx_msg void OnBnClickedButton2();
 	afx_msg void OnBnClickedButton3();
+	afx_msg void OnBnClickedButton1();
+	CStatic picture;
 };

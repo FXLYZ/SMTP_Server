@@ -2,7 +2,7 @@
 #include "CSocketSMTP.h"
 #include "SMTP_ServerDlg.h"
 #include "base.h"
-
+#include<iostream>
 
 CSocketSMTP::CSocketSMTP()
 {
@@ -27,22 +27,22 @@ void CSocketSMTP::OnAccept(int nErrorCode)
 	CSMTPServerDlg* pDlg=(CSMTPServerDlg*)AfxGetMainWnd();
 	CString temp;
 	pDlg->ServerLog.GetWindowTextW(temp);
-	pDlg->ServerLog.SetWindowTextW(temp + L"监听到连接请求\n");
+	pDlg->ServerLog.SetWindowTextW(temp + L"监听到连接请求\r\n");
 	targetsocket = new CSocketSMTP();
 	if (Accept(*targetsocket))
 	{
-		char* buf = "220 SMTP is ready\n";
+		char* buf = "220 SMTP is ready\r\n";
 		targetsocket->Send(buf, strlen(buf), 0);
 		targetsocket->AsyncSelect(FD_READ);
 		pDlg->ServerLog.GetWindowTextW(temp);
-		pDlg->ServerLog.SetWindowTextW(temp + L"S: 回复连接请求成功\n");
+		pDlg->ServerLog.SetWindowTextW(temp + L"S: 回复连接请求成功\r\n");
 		pDlg->ServerLog.GetWindowTextW(temp);
 		pDlg->ServerLog.SetWindowTextW(temp + L"S:"+buf);
 	}
 	else
 	{
 		pDlg->ServerLog.GetWindowTextW(temp);
-		pDlg->ServerLog.SetWindowTextW(temp + L"S: 回复连接请求失败\n");
+		pDlg->ServerLog.SetWindowTextW(temp + L"S: 回复连接请求失败\r\n");
 	}
     CAsyncSocket::OnAccept(nErrorCode);
 }
@@ -58,14 +58,14 @@ void CSocketSMTP::OnReceive(int nErrorCode)
 	if (IsLog)
 	{
 		pDlg->ServerLog.GetWindowTextW(temp);
-		pDlg->ServerLog.SetWindowTextW(temp + L"C:"+receive.Left(length)+L"\n");
+		pDlg->ServerLog.SetWindowTextW(temp + L"C: "+receive.Left(length)+L"\r\n");
 	}
 	else
 	{
 		if (DataFinish)
 		{
 			pDlg->ServerLog.GetWindowTextW(temp);
-			pDlg->ServerLog.SetWindowTextW(temp + L"C:" + receive.Left(4)+L"\n");
+			pDlg->ServerLog.SetWindowTextW(temp + L"C: " + receive.Left(4)+L"\r\n");
 		}
 	}
 	if (length!=0)
@@ -75,30 +75,30 @@ void CSocketSMTP::OnReceive(int nErrorCode)
 			char* buf;
 			if (receive.Left(4)=="EHLO")
 			{
-				buf = "250 OK 127.0.0.1\n";
+				buf = "250 OK 127.0.0.1\r\n";
 				Send(buf, strlen(buf), 0);
 				AsyncSelect(FD_READ);
 				pDlg->ServerLog.GetWindowTextW(temp);
-				pDlg->ServerLog.SetWindowTextW(temp + L"C:"+buf);
+				pDlg->ServerLog.SetWindowTextW(temp + L"S: "+buf);
 				return;
 			}
 			else if (receive.Left(10) == "MAIL FROM:")
 			{
-				buf = "250 Sender OK\n";
+				buf = "250 Sender OK\r\n";
 
 				Send(buf, strlen(buf), 0);
 				AsyncSelect(FD_READ);
 				pDlg->ServerLog.GetWindowTextW(temp);
-				pDlg->ServerLog.SetWindowTextW(temp + L"C:" + buf);
+				pDlg->ServerLog.SetWindowTextW(temp + L"S: " + buf);
 				return;
 			}
 			else if (receive.Left(8) == "RCPT TO:")
 			{
-				buf = "250 Receiver OK\n";
+				buf = "250 Receiver OK\r\n";
 				Send(buf, strlen(buf), 0);
 				AsyncSelect(FD_READ);
 				pDlg->ServerLog.GetWindowTextW(temp);
-				pDlg->ServerLog.SetWindowTextW(temp + L"C:" + buf);
+				pDlg->ServerLog.SetWindowTextW(temp + L"S: " + buf);
 				return;
 			}
 			else if (receive.Left(4) == "DATA")
@@ -109,24 +109,24 @@ void CSocketSMTP::OnReceive(int nErrorCode)
 				Send(buf, strlen(buf), 0);
 				AsyncSelect(FD_READ);
 				pDlg->ServerLog.GetWindowTextW(temp);
-				pDlg->ServerLog.SetWindowTextW(temp + L"C:" + buf);
+				pDlg->ServerLog.SetWindowTextW(temp + L"S: " + buf);
 				return;
 			}
 			else if (receive.Left(4) == "QUIT" || receive.Left(4) == "RSET")
 			{
-				buf = "221 Quit, Goodbye !\n";
+				buf = "221 Quit, Goodbye !\r\n";
 				Send(send, strlen(buf), 0);
 				pDlg->ServerLog.GetWindowTextW(temp);
-				pDlg->ServerLog.SetWindowTextW(temp + L"C:" + buf);
+				pDlg->ServerLog.SetWindowTextW(temp + L"S: " + buf);
 				Close();
 				return;
 			}
 			else
 			{
-				buf = "500 order is wrong\n";
+				buf = "500 order is wrong\r\n";
 				Send(send, strlen(buf), 0);
 				pDlg->ServerLog.GetWindowTextW(temp);
-				pDlg->ServerLog.SetWindowTextW(temp + L"C:" + buf);
+				pDlg->ServerLog.SetWindowTextW(temp + L"S:" + buf);
 				Close();
 				return;
 			}
@@ -135,30 +135,41 @@ void CSocketSMTP::OnReceive(int nErrorCode)
 		{
 			CSMTPServerDlg* pDlg = (CSMTPServerDlg*)AfxGetMainWnd();
 			CString temp;
-			pDlg->GetWindowTextW(temp);
-			pDlg->SetWindowTextW(temp + receive.Left(length));
+			pDlg->MailContent.GetWindowTextW(temp);
+			pDlg->MailContent.SetWindowTextW(temp + receive.Left(length));
 			if (receive.Find(_T("\r\n.\r\n")) != -1)
 			{
 				DataFinish = true;
 				IsLog =true;
 				char* buf= "250 Message accepted for delivery\r\n";
 				Send(buf, strlen(buf), 0);
-				pDlg->GetWindowTextW(temp);
-				pDlg->SetWindowTextW(temp + buf);
-				pDlg->GetWindowTextW(pic);
-				if (pic.Find(_T("Content-Type: image/bmp")) != -1)
+				pDlg->ServerLog.GetWindowTextW(temp);
+				pDlg->ServerLog.SetWindowTextW(temp + L"S: "+buf);
+				pDlg->MailContent.GetWindowTextW(pic);
+				int hasBmp = pic.Find(_T("Content-Type: image/bmp"));
+				int hasPng = pic.Find(_T("Content-Type: image/png"));
+				int begin=-1;
+				CString type;
+				if (hasBmp!=-1)
 				{
-					//截取bmp图片的base64编码
-					int Attachment_Start = pic.Find(_T("Content-Disposition: attachment"), 0);
-					int Bmp_Start = pic.Find(_T("\r\n\r\n"), Attachment_Start);
+					begin = hasBmp;
+					type = L"bmp";
+				}
+				else if (hasPng!=-1)
+				{
+					begin = hasPng;
+					type = L"png";
+				}
+				if (begin!=-1)
+				{
+					
+					int Bmp_Start = pic.Find(_T("\r\n\r\n"), begin);
 					CString Start = pic.Mid(Bmp_Start + 4, pic.GetLength() - Bmp_Start - 4);
 					int length = Start.Find(_T("\r\n\r\n"), 0);
 					pic = Start.Left(length);
 					HBITMAP picture;
-					//解码
-					DeCode(pic, picture);
-					//输入到对话框
-					//pDlg->m_bmp.SetBitmap(picture);
+					DeCode(pic, picture,type);
+					pDlg->picture.SetBitmap(picture);
 				}
 			}
 			AsyncSelect(FD_READ);

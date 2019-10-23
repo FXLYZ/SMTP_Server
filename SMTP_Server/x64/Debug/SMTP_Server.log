@@ -1,1 +1,11 @@
-﻿  SMTP_Server.vcxproj -> C:\Users\曾志韬\Desktop\SMTP_Server\x64\Debug\SMTP_Server.exe
+﻿  CSocketSMTP.cpp
+C:\Users\曾志韬\Desktop\SMTP_Server\SMTP_Server\base.h(38,13): warning C4244: “初始化”: 从“wchar_t”转换到“char”，可能丢失数据
+C:\Users\曾志韬\Desktop\SMTP_Server\SMTP_Server\CSocketSMTP.cpp(35,41): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\曾志韬\Desktop\SMTP_Server\SMTP_Server\CSocketSMTP.cpp(79,29): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\曾志韬\Desktop\SMTP_Server\SMTP_Server\CSocketSMTP.cpp(89,29): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\曾志韬\Desktop\SMTP_Server\SMTP_Server\CSocketSMTP.cpp(98,29): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\曾志韬\Desktop\SMTP_Server\SMTP_Server\CSocketSMTP.cpp(109,29): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\曾志韬\Desktop\SMTP_Server\SMTP_Server\CSocketSMTP.cpp(118,30): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\曾志韬\Desktop\SMTP_Server\SMTP_Server\CSocketSMTP.cpp(127,30): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\曾志韬\Desktop\SMTP_Server\SMTP_Server\CSocketSMTP.cpp(145,29): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+  SMTP_Server.vcxproj -> C:\Users\曾志韬\Desktop\SMTP_Server\x64\Debug\SMTP_Server.exe

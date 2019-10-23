@@ -1,6 +1,5 @@
-
 BOOL SwapCharToByte(BYTE&, char&);//换码
-BOOL DeCode(CString &, HBITMAP &);//解码并写成bmp图片
+BOOL DeCode(CString&, HBITMAP&);//解码并写成bmp图片
 char symbol[65] = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd',
@@ -10,7 +9,7 @@ char symbol[65] = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
 '8', '9', '+', '/' };
 BOOL SwapCharToByte(BYTE& a, char& b)
 {
-	for (int i = 0; i<65; i++)
+	for (int i = 0; i < 65; i++)
 	{
 		if (b == symbol[i])
 		{
@@ -21,20 +20,20 @@ BOOL SwapCharToByte(BYTE& a, char& b)
 	return false;
 }
 
-BOOL DeCode(CString &attachment, HBITMAP &picture)
+BOOL DeCode(CString& attachment, HBITMAP& picture,CString type)
 {
 	BYTE buf[4];
 	CFile file;
-	if (file.Open(_T("1.bmp"), CFile::modeWrite | CFile::modeCreate))
+	if (file.Open(_T("temp."+type), CFile::modeWrite | CFile::modeCreate))
 	{
 		int len = attachment.GetLength();
 		BYTE temp[4];
 		int i = 0;
-		while (i<len)
+		while (i < len)
 		{
-			for (int k = 0; k<4; k++)
+			for (int k = 0; k < 4; k++)
 			{
-				if (i<len)
+				if (i < len)
 				{
 					char t = attachment.GetAt(i);//获得字符串里的每一个字符
 					if (!SwapCharToByte(temp[k], t))
@@ -55,8 +54,8 @@ BOOL DeCode(CString &attachment, HBITMAP &picture)
 		}
 	}
 	file.Close();
-	//文件变成bmp图像
-	picture = (HBITMAP)::LoadImage(NULL, _T("1.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+	picture = (HBITMAP)::LoadImage(NULL, _T("temp."+type), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
 	return true;
 }
+
 

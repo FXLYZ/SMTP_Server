@@ -65,6 +65,7 @@ void CSMTPServerDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT2, MailContent);
 	DDX_Control(pDX, IDC_BUTTON2, StartButton);
 	DDX_Control(pDX, IDC_BUTTON3, StopButton);
+	DDX_Control(pDX, IDC_PICTURE, picture);
 }
 
 BEGIN_MESSAGE_MAP(CSMTPServerDlg, CDialogEx)
@@ -75,6 +76,7 @@ BEGIN_MESSAGE_MAP(CSMTPServerDlg, CDialogEx)
 	ON_WM_TIMER()
 	ON_BN_CLICKED(IDC_BUTTON2, &CSMTPServerDlg::OnBnClickedButton2)
 	ON_BN_CLICKED(IDC_BUTTON3, &CSMTPServerDlg::OnBnClickedButton3)
+	ON_BN_CLICKED(IDC_BUTTON1, &CSMTPServerDlg::OnBnClickedButton1)
 END_MESSAGE_MAP()
 
 
@@ -172,21 +174,21 @@ void CSMTPServerDlg::OnTimer(UINT_PTR nIDEvent)
 void CSMTPServerDlg::OnBnClickedButton2()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	ServerLog.SetWindowTextW(L"SMTP服务器启动,正在监听\n");
+	ServerLog.SetWindowTextW(L"SMTP服务器启动,正在监听\r\n");
 	BOOL bflag = mysocket.Create(25, SOCK_STREAM, FD_READ | FD_WRITE | FD_ACCEPT);
 	if (!bflag)
 	{
-		ServerLog.SetWindowTextW(L"socket创建失败");
+		ServerLog.SetWindowTextW(L"socket创建失败\r\n");
 	}
 	else
 	{
 		if (mysocket.Listen(5))
 		{
-			ServerLog.SetWindowTextW(L"SMTP服务器启动,正在监听\n");
+			ServerLog.SetWindowTextW(L"SMTP服务器启动,正在监听\r\n");
 		}
 		else
 		{
-			ServerLog.SetWindowTextW(L"SMTP启动失败,监听不成功\n");
+			ServerLog.SetWindowTextW(L"SMTP启动失败,监听不成功\r\n");
 			mysocket.Close();
 		}
 	}
@@ -198,6 +200,13 @@ void CSMTPServerDlg::OnBnClickedButton3()
 	// TODO: 在此添加控件通知处理程序代码
 	CString temp;
 	ServerLog.GetWindowTextW(temp);
-	ServerLog.SetWindowTextW(temp + "服务器关闭\n");
+	ServerLog.SetWindowTextW(temp + "服务器关闭\r\n");
 	mysocket.Close();
+}
+
+
+void CSMTPServerDlg::OnBnClickedButton1()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	MailContent.SetWindowTextW(L"");
 }
