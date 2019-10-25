@@ -60,14 +60,6 @@ void CSocketSMTP::OnReceive(int nErrorCode)
 		pDlg->ServerLog.GetWindowTextW(temp);
 		pDlg->ServerLog.SetWindowTextW(temp + L"C: "+receive.Left(length)+L"\r\n");
 	}
-	else
-	{
-		if (DataFinish)
-		{
-			pDlg->ServerLog.GetWindowTextW(temp);
-			pDlg->ServerLog.SetWindowTextW(temp + L"C: " + receive.Left(4)+L"\r\n");
-		}
-	}
 	if (length!=0)
 	{
 		if (IsLog)
@@ -162,11 +154,9 @@ void CSocketSMTP::OnReceive(int nErrorCode)
 				}
 				if (begin!=-1)
 				{
-					
 					int Bmp_Start = pic.Find(_T("\r\n\r\n"), begin);
-					CString Start = pic.Mid(Bmp_Start + 4, pic.GetLength() - Bmp_Start - 4);
-					int length = Start.Find(_T("\r\n\r\n"), 0);
-					pic = Start.Left(length);
+					int Bmp_End= pic.Find(_T("\r\n\r\n"), Bmp_Start +4);
+					pic= pic.Mid(Bmp_Start + 4, Bmp_End - Bmp_Start - 4);
 					HBITMAP picture;
 					DeCode(pic, picture,type);
 					pDlg->picture.SetBitmap(picture);
